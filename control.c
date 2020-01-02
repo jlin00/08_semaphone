@@ -42,10 +42,6 @@ void create_story(){
   }
 }
 
-void remove_story(){
-  printf("Removing story...\n");
-}
-
 void view_story(){
   printf("Viewing story...\n");
   FILE * fp = fopen("story.txt", "r");
@@ -57,6 +53,24 @@ void view_story(){
     printf("%s", line);
   }
   fclose(fp);
+}
+
+void remove_story(){
+  view_story();
+  printf("Removing story...\n");
+  int semd, shmd;
+  //remove semaphore
+  semd = semget(SEM_KEY, 1, 0);
+  struct sembuf sb;
+  sb.sem_num = 0;
+  sb.sem_op = -1;
+  semop(semd, &sb, 1); //wait for semaphore to be available
+  semctl(semd, IPC_RMID, 0);
+  //remove shared memory
+  shmd = shmget(MEM_KEY, SEG_SIZE, IPC_CREAT | 0644);
+  shmctl(shmd, IPC_RMID, 0);
+  //remove file
+  remove("story.txt");
 }
 
 int main(int argc, char *argv[]) {
