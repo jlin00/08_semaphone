@@ -21,7 +21,7 @@
 //                              (Linux-specific) */
 //};
 
-void create_story(){
+void create_story(){ //on hold, should create wipe contents?
   printf("Creating story...\n");
   int semd, shmd, fd;
   char *data;
@@ -48,8 +48,8 @@ void view_story(){
   if (errno != 0){
     printf("%s\n", strerror(errno));
   }
-  char line[100];
-  while (fgets(line, 100, fp)){
+  char line[SEG_SIZE];
+  while (fgets(line, SEG_SIZE, fp)){
     printf("%s", line);
   }
   fclose(fp);
