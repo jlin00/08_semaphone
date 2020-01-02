@@ -35,6 +35,10 @@ void create_story(){ //on hold, should create wipe contents?
   //shared memory
   shmd = shmget(MEM_KEY, SEG_SIZE, IPC_CREAT | 0644);
   data = shmat(shmd, 0, 0);
+  if (*data){
+    strcpy(data, "");
+    shmdt(data);
+  }
   //file
   fd = open("story.txt", O_CREAT | O_TRUNC, 0644);
   if (fd != -1){
