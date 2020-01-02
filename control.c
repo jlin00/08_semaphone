@@ -11,6 +11,7 @@
 
 #define SEM_KEY 10282
 #define MEM_KEY 24602
+#define SEG_SIZE 200
 
 //union semun {
 //  int              val;    /* Value for SETVAL */
@@ -22,24 +23,22 @@
 
 void create_story(){
   printf("Creating story...\n");
-  int semd;
-  int v, r;
+  int semd, shmd, fd;
+  char *data;
   semd = semget(SEM_KEY, 1, IPC_CREAT | IPC_EXCL | 0644);
-  if (semd == -1){ //already exists
-    semd = semget(SEM_KEY, 1, 0);
-    v = semctl(semd, 0, GETVAL, 0);
-    printf("Story has already been created!\n");
-  }
-  else {
-    //semaphore
+  //semaphore
+  if (semd != -1){
     union semun us;
     us.val = 1;
-    r = semctl(semd, 0, SETVAL, us);
-    //shared memory
-
-    //file
-    
-    printf("Story successfully created!\n");
+    semctl(semd, 0, SETVAL, us);
+  }
+  //shared memory
+  shmd = shmget(MEM_KEY, SEG_SIZE, IPC_CREAT | 0644);
+  data = shmat(shmd, 0, 0);
+  //file
+  fd = open("story.txt", O_CREAT | O_TRUNC, 0644);
+  if (fd != -1){
+    close(fd);
   }
 }
 
