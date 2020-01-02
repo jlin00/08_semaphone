@@ -20,34 +20,35 @@
 //                              (Linux-specific) */
 //};
 
-int main() {
+void create_story(){
+  printf("Creating story...\n");
+}
 
-  int semd;
-  int v, r;
-  char input[3];
+void remove_story(){
+  printf("Removing story...\n");
+}
 
-  semd = semget(SEM_KEY, 1, IPC_CREAT | IPC_EXCL | 0644);
-  if (semd == -1) {
-    printf("error %d: %s\n", errno, strerror(errno));
-    semd = semget(SEM_KEY, 1, 0);
-    v = semctl(semd, 0, GETVAL, 0);
-    printf("semctl returned: %d\n", v);
+void view_story(){
+  printf("Viewing story...\n");
+}
+
+int main(int argc, char *argv[]) {
+  if (argc > 1){
+    if (!strcmp(argv[1],"-c")){
+      create_story();
+    }
+    else if (!strcmp(argv[1],"-r")){
+      remove_story();
+    }
+    else if (!strcmp(argv[1],"-v")){
+      view_story();
+    }
+    else {
+      printf("Please run ./control with -c, -r, or -v.\n");
+    }
   }
   else {
-    union semun us;
-    us.val = 1;
-    r = semctl(semd, 0, SETVAL, us);
-    printf("semctl returned: %d\n", r);
+    printf("Please run ./control with -c, -r, or -v.\n");
   }
-
-  printf("Would you like to remove the semaphore?(y/n) ");
-  fgets(input, 3, stdin);
-
-  if (input[0] == 'y') {
-    semctl(semd, IPC_RMID, 0);
-    printf("segment deleted\n");
-  }
-
-
   return 0;
 }
