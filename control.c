@@ -73,23 +73,17 @@ void remove_story(){
   remove("story.txt");
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]){
   if (argc > 1){
     if (!strcmp(argv[1],"-c")){
       create_story();
     }
-    else if (!strcmp(argv[1],"-r")){
+    if (!strcmp(argv[1],"-r")){
       remove_story();
     }
-    else if (!strcmp(argv[1],"-v")){
+    if (!strcmp(argv[1],"-v")){
       view_story();
     }
-    else {
-      printf("Please run ./control with -c, -r, or -v.\n");
-    }
-  }
-  else {
-    printf("Please run ./control with -c, -r, or -v.\n");
   }
   return 0;
 }
