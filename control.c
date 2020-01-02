@@ -9,8 +9,8 @@
 #include <fcntl.h>
 #include <sys/shm.h>
 
-#define MEM_KEY 24602
 #define SEM_KEY 10282
+#define MEM_KEY 24602
 
 //union semun {
 //  int              val;    /* Value for SETVAL */
@@ -22,6 +22,25 @@
 
 void create_story(){
   printf("Creating story...\n");
+  int semd;
+  int v, r;
+  semd = semget(SEM_KEY, 1, IPC_CREAT | IPC_EXCL | 0644);
+  if (semd == -1){ //already exists
+    semd = semget(SEM_KEY, 1, 0);
+    v = semctl(semd, 0, GETVAL, 0);
+    printf("Story has already been created!\n");
+  }
+  else {
+    //semaphore
+    union semun us;
+    us.val = 1;
+    r = semctl(semd, 0, SETVAL, us);
+    //shared memory
+
+    //file
+    
+    printf("Story successfully created!\n");
+  }
 }
 
 void remove_story(){

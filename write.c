@@ -9,8 +9,8 @@
 #include <fcntl.h>
 #include <sys/shm.h>
 
-#define MEM_KEY 24602
 #define SEM_KEY 10282
+#define MEM_KEY 24602
 
 int main() {
   return 0;
