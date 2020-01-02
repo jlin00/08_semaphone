@@ -48,6 +48,15 @@ void remove_story(){
 
 void view_story(){
   printf("Viewing story...\n");
+  FILE * fp = fopen("story.txt", "r");
+  if (errno != 0){
+    printf("%s\n", strerror(errno));
+  }
+  char line[100];
+  while (fgets(line, 100, fp)){
+    printf("%s", line);
+  }
+  fclose(fp);
 }
 
 int main(int argc, char *argv[]) {
