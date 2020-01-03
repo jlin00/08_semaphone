@@ -22,6 +22,7 @@ int main() {
   if (semd == -1){
     printf("%s\n", strerror(errno));
   }
+  printf("Trying to get in...\n");
   struct sembuf sb;
   sb.sem_num = 0;
   sb.sem_op = -1;
