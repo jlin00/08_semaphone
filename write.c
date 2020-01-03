@@ -18,11 +18,11 @@ int main() {
   char *data;
   char input[SEG_SIZE];
   //check semaphore availability
-  printf("trying to get in\n");
   semd = semget(SEM_KEY, 1, 0);
   if (semd == -1){
     printf("%s\n", strerror(errno));
   }
+  printf("trying to get in\n");
   struct sembuf sb;
   sb.sem_num = 0;
   sb.sem_op = -1;
@@ -40,24 +40,24 @@ int main() {
     printf("%s\n", strerror(errno));
   }
   //let user add to story
-  fd = open("story.txt", O_WRONLY| O_APPEND, 0644);
-  if (fd == -1){
-    printf("%s\n", strerror(errno));
-  }
   printf("Last addition: %s\n", data); //access last addition from shared mem
   printf("Your addition: ");
   fgets(input, SEG_SIZE, stdin); //ask for user input
   strcpy(data, input);
   *strchr(data, '\n') = 0;
-  write(fd, input, strlen(input)); //add line to story
   if (errno != 0){
     printf("%s\n", strerror(errno));
   }
   shmdt(data); //update shared memory
+  //update file
+  fd = open("story.txt", O_WRONLY| O_APPEND, 0644);
+  if (fd == -1){
+    printf("%s\n", strerror(errno));
+  }
+  write(fd, input, strlen(input)); //add line to story
   if (errno != 0){
     printf("%s\n", strerror(errno));
   }
-  //update file
   close(fd);
   //done with semaphore
   sb.sem_op = 1;
